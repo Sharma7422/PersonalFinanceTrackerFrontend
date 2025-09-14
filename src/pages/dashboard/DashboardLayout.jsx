@@ -13,22 +13,21 @@ export default function DashboardLayout() {
   const IMAGE_BASE = import.meta.env.VITE_IMAGE_BASE + "/userImg/";
   
 
-  let user = { name: "User", avatar: "/default-avatar.png" };
-  try {
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      let avatar = parsed.profile || parsed.avatar || "/default-avatar.png";
-      if (avatar && !avatar.startsWith("http")) {
-        avatar = IMAGE_BASE + avatar;
-      }
-      user = {
-        name: parsed.name || "User",
-        avatar,
-      };
+  let user = { name: "User", avatar: "default-avatar.png" };
+try {
+  const stored = localStorage.getItem("user");
+  if (stored) {
+    const parsed = JSON.parse(stored);
+    let avatar = parsed.profile || "default-avatar.png";
+    if (avatar && !avatar.startsWith("http")) {
+      avatar = IMAGE_BASE + avatar;
     }
-  } catch (e) {}
-
+    user = {
+      name: parsed.name || "User",
+      avatar,
+    };
+  }
+} catch (e) {}
   // Sidebar navigation items
   const navItems = [
     { to: "/", icon: <Home size={18} />, label: "Dashboard" },

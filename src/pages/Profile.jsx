@@ -61,10 +61,21 @@ export default function ProfilePage() {
       formData.append("phoneNo", phoneNo);
       if (file) formData.append("profile", file);
 
-      await api.updateProfile(formData);
-      setSuccessMsg("Profile updated!");
+      const res = await api.updateProfile(formData);
+setSuccessMsg("Profile updated!");
+
+// Update localStorage and reload to update topbar info
+const updatedUser = {
+  name: res.data.name,
+  avatar: res.data.profile // this is the filename or image path from backend
+};
+localStorage.setItem("user", JSON.stringify(updatedUser));
+setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+
     } catch (err) {
-      setErrorMsg("Failed to update profile.");
+      setErrorMsg(err.response?.data?.message );
     } finally {
       setLoading(false);
     }

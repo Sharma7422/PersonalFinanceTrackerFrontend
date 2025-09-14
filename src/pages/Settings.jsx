@@ -128,22 +128,35 @@ const fetchTags = async () => {
 };
 
   // Profile update
-  const handleSaveProfile = async () => {
-    setErrorMsg("");
-    setSuccessMsg("");
-    try {
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append("phoneNo", phoneNo);
-      if (profile) formData.append("profile", profile);
-      await api.updateProfile(formData);
-      await fetchProfile();
-      setSuccessMsg("Profile updated!");
-    } catch (err) {
-      setErrorMsg(err.response?.data?.message || "Failed to update profile");
-    }
-  };
+const handleSaveProfile = async () => {
+  setErrorMsg("");
+  setSuccessMsg("");
+  try {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("phoneNo", phoneNo);
+    if (profile) formData.append("profile", profile);
+
+    const res = await api.updateProfile(formData);
+    await fetchProfile();
+    setSuccessMsg("Profile updated!");
+
+    // Update localStorage and reload to update topbar info after a short delay
+    const updatedUser = {
+      name: res.data.name,
+      avatar: res.data.profile // this is the filename or image path from backend
+    };
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+
+  } catch (err) {
+    setErrorMsg(err.response?.data?.message || "Failed to update profile");
+  }
+};
+
 
   // Password update
   const handleChangePassword = async () => {
