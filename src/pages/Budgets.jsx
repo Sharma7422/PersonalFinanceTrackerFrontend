@@ -23,7 +23,7 @@ import { Pencil, Trash2, Plus } from "lucide-react";
 import api from "../api/api";
 
 const categoryColors = [
-  "bg-indigo-500",
+  "bg-primary", // blue
   "bg-pink-500",
   "bg-green-500",
   "bg-yellow-500",
@@ -158,93 +158,93 @@ export default function BudgetsPage() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-2 sm:p-4 md:p-6">
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-      <h2 className="text-2xl font-bold">Budgets</h2>
-      <Button
-        onClick={() => setIsAddOpen(true)}
-        className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white rounded-xl shadow-lg w-full sm:w-auto"
-      >
-        <Plus size={18} /> Add Budget
-      </Button>
-    </div>
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+        <h2 className="text-2xl font-bold text-primary dark:text-blue-300">Budgets</h2>
+        <Button
+          onClick={() => setIsAddOpen(true)}
+          className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white rounded-xl shadow-lg w-full sm:w-auto"
+        >
+          <Plus size={18} /> Add Budget
+        </Button>
+      </div>
 
       {/* Budget Grid */}
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-      <AnimatePresence>
-        {budgets.map((budget, idx) => {
-          const percent = Math.min((budget.spent / budget.limit) * 100, 100);
-          return (
-            <motion.div
-              key={budget.id}
-              whileHover={{ scale: 1.04, boxShadow: "0 8px 32px rgba(80,80,200,0.18)" }}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 30 }}
-              transition={{ type: "spring", stiffness: 200, damping: 18 }}
-            >
-              <Card
-                className={`p-4 sm:p-6 rounded-2xl relative group border-2 transition-all duration-300 ${
-                  percent >= 100
-                    ? "border-red-500"
-                    : percent >= 80
-                    ? "border-yellow-400"
-                    : "border-indigo-600"
-                }`}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <AnimatePresence>
+          {budgets.map((budget, idx) => {
+            const percent = Math.min((budget.spent / budget.limit) * 100, 100);
+            return (
+              <motion.div
+                key={budget.id}
+                whileHover={{ scale: 1.04, boxShadow: "0 8px 32px rgba(80,80,200,0.18)" }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 30 }}
+                transition={{ type: "spring", stiffness: 200, damping: 18 }}
               >
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`w-10 h-10 flex items-center justify-center rounded-full text-2xl font-bold shadow ${getCategoryColor(
-                        idx
-                      )}`}
-                    >
-                      {budget.icon || "💰"}
-                    </span>
-                    <span className="text-lg font-semibold">{budget.category}</span>
+                <Card
+                  className={`p-4 sm:p-6 rounded-2xl relative group border-2 transition-all duration-300 ${
+                    percent >= 100
+                      ? "border-red-500"
+                      : percent >= 80
+                      ? "border-yellow-400"
+                      : "border-primary"
+                  } bg-white dark:bg-gray-900`}
+                >
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`w-10 h-10 flex items-center justify-center rounded-full text-2xl font-bold shadow ${getCategoryColor(
+                          idx
+                        )}`}
+                      >
+                        {budget.icon || "💰"}
+                      </span>
+                      <span className="text-lg font-semibold">{budget.category}</span>
+                    </div>
+                    <span className="text-sm text-gray-500 font-medium">₹{budget.limit}</span>
                   </div>
-                  <span className="text-sm text-gray-500 font-medium">₹{budget.limit}</span>
-                </div>
-                <Progress
+                  <Progress
                     value={percent}
-                  className="h-3"
-                  indicatorClassName={getColor(percent)}
-                  animate
-                />
-                <p className="mt-3 text-sm">
-                  Spent: <span className="font-medium">₹{budget.spent}</span> / ₹{budget.limit}
-                </p>
-                <div className="flex flex-col sm:flex-row gap-2 mt-4">
-                  <Button size="sm" variant="outline" className="w-full sm:w-auto" onClick={() => openDrawer(budget)}>
-                    View
-                  </Button>
-                  <Button size="sm" variant="outline" className="w-full sm:w-auto" onClick={() => openEdit(budget)}>
-                    <Pencil size={16} />
-                  </Button>
-                  <Button size="sm" variant="destructive" className="w-full sm:w-auto" onClick={() => openDelete(budget)}>
-                    <Trash2 size={16} />
-                  </Button>
-                </div>
-              </Card>
-            </motion.div>
-          );
-        })}
-      </AnimatePresence>
+                    className="h-3"
+                    indicatorClassName={getColor(percent)}
+                    animate
+                  />
+                  <p className="mt-3 text-sm">
+                    Spent: <span className="font-medium">₹{budget.spent}</span> / ₹{budget.limit}
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-2 mt-4">
+                    <Button size="sm" variant="outline" className="w-full sm:w-auto" onClick={() => openDrawer(budget)}>
+                      View
+                    </Button>
+                    <Button size="sm" variant="outline" className="w-full sm:w-auto" onClick={() => openEdit(budget)}>
+                      <Pencil size={16} />
+                    </Button>
+                    <Button size="sm" variant="destructive" className="w-full sm:w-auto" onClick={() => openDelete(budget)}>
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
         {budgets.length === 0 && (
-        <motion.div
-          className="col-span-full text-center text-muted-foreground py-12 flex flex-col items-center"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <span className="text-6xl mb-4">📊</span>
-          <div className="text-lg font-semibold mb-2">No budgets found</div>
-          <div className="mb-4">Click <b>Add Budget</b> to create your first budget.</div>
-        </motion.div>
-      )}
-    </div>
+          <motion.div
+            className="col-span-full text-center text-muted-foreground py-12 flex flex-col items-center"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <span className="text-6xl mb-4">📊</span>
+            <div className="text-lg font-semibold mb-2">No budgets found</div>
+            <div className="mb-4">Click <b>Add Budget</b> to create your first budget.</div>
+          </motion.div>
+        )}
+      </div>
 
       {/* Drawer for Category Details */}
       <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-      <DrawerContent className="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-t-2xl shadow-lg max-w-2xl mx-auto">
+        <DrawerContent className="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-t-2xl shadow-lg max-w-2xl mx-auto">
           <motion.div
             initial={{ opacity: 0, x: 80 }}
             animate={{ opacity: 1, x: 0 }}
@@ -314,7 +314,7 @@ export default function BudgetsPage() {
 
       {/* Add Budget Dialog */}
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-      <DialogContent className="bg-white rounded-xl max-w-md w-full">
+        <DialogContent className="bg-white dark:bg-gray-900 rounded-xl max-w-md w-full">
           <DialogHeader>
             <DialogTitle>Add Budget</DialogTitle>
           </DialogHeader>
@@ -325,14 +325,14 @@ export default function BudgetsPage() {
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
-                <SelectContent className="bg-white">
-  {categories.map((c, idx) => (
-    <SelectItem key={c} value={c}>
-      <span className={`inline-block w-4 h-4 rounded-full mr-2 ${getCategoryColor(idx)}`}></span>
-      {c}
-    </SelectItem>
-  ))}
-</SelectContent>
+                <SelectContent className="bg-white dark:bg-gray-900">
+                  {categories.map((c, idx) => (
+                    <SelectItem key={c} value={c}>
+                      <span className={`inline-block w-4 h-4 rounded-full mr-2 ${getCategoryColor(idx)}`}></span>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
             </div>
             <div>
@@ -373,7 +373,7 @@ export default function BudgetsPage() {
 
       {/* Edit Budget Dialog */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-      <DialogContent className="bg-white rounded-xl max-w-md w-full">
+        <DialogContent className="bg-white dark:bg-gray-900 rounded-xl max-w-md w-full">
           <DialogHeader>
             <DialogTitle>Edit Budget</DialogTitle>
           </DialogHeader>
@@ -384,7 +384,7 @@ export default function BudgetsPage() {
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white dark:bg-gray-900">
                   {categories.map((c, idx) => (
                     <SelectItem key={c} value={c}>
                       <span className={`inline-block w-4 h-4 rounded-full mr-2 ${getCategoryColor(idx)}`}></span>
@@ -432,7 +432,7 @@ export default function BudgetsPage() {
 
       {/* Delete Budget Dialog */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-      <DialogContent className="bg-white rounded-xl max-w-md w-full">
+        <DialogContent className="bg-white dark:bg-gray-900 rounded-xl max-w-md w-full">
           <DialogHeader>
             <DialogTitle>Delete Budget</DialogTitle>
           </DialogHeader>

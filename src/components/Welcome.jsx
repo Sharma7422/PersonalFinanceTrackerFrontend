@@ -8,8 +8,12 @@ export default function Welcome({ user }) {
     <div className="flex items-center gap-4 mb-6">
       <Avatar name={user.name} round size="48" />
       <div>
-        <div className="text-lg font-semibold">{greeting}, {user.name}!</div>
-        <div className="text-sm text-gray-500">Welcome back to your finance dashboard.</div>
+        <div className="text-lg font-semibold text-primary dark:text-blue-300">
+          {greeting}, {user.name}!
+        </div>
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+          Welcome back to your finance dashboard.
+        </div>
       </div>
     </div>
   );

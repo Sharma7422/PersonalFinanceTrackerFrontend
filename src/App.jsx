@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { FinancialRecordProvider } from "./contexts/FinancialRecordProvider";
-import { ThemeProvider } from "./components/theme-provider";
+import { ThemeProvider } from "./components/ThemeContext";
 import ToastContainer from "./components/ToastContainer";
 import LoadingScreen from "./components/LoadingScreen";
 import api from "./api/api";
-
 
 // Layout + Pages
 import DashboardLayout from "./pages/dashboard/DashboardLayout";
@@ -117,26 +116,26 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  async function initializeApp() {
-    try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        await api.getUser(); // fetch user data
+    async function initializeApp() {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          await api.getUser(); // fetch user data
+        }
+        // ...any other startup logic...
+      } finally {
+        setLoading(false);
       }
-      // ...any other startup logic...
-    } finally {
-      setLoading(false);
     }
-  }
-  initializeApp();
-}, []);
+    initializeApp();
+  }, []);
 
   if (loading) return <LoadingScreen />;
   return (
     <FinancialRecordProvider>
       <ThemeProvider>
         <BrowserRouter>
-          <div className="transition-colors duration-500 bg-white dark:bg-gray-900 min-h-screen">
+          <div className="transition-colors duration-500 bg-background text-text dark:bg-gray-900 dark:text-gray-100 min-h-screen">
             <AppRoutes />
             <ToastContainer />
           </div>
@@ -147,7 +146,3 @@ function App() {
 }
 
 export default App;
-
-
-
-

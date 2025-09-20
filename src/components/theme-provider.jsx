@@ -1,17 +1,23 @@
-"use client";
+import React, { createContext, useState, useEffect } from "react";
 
-import * as React from "react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+export const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState(() =>
+    localStorage.getItem("theme") || "light"
+  );
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () =>
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+
   return (
-    <NextThemesProvider
-      attribute="class"   // Tailwind will use class on <html>
-      defaultTheme="light"
-      enableSystem={true} // Optional: allow system preference
-      disableTransitionOnChange
-    >
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
-    </NextThemesProvider>
+    </ThemeContext.Provider>
   );
 }

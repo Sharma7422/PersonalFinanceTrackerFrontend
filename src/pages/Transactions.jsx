@@ -52,16 +52,14 @@ export default function TransactionsPage() {
   const [formImageFile, setFormImageFile] = useState(null);
 
   // Success message state
-  const [successMsg, setSuccessMsg] = useState(""); // <-- NEW
+  const [successMsg, setSuccessMsg] = useState("");
 
   // Fetch categories and transactions
   const fetchTransactions = async () => {
     setLoading(true);
     try {
-      // Fetch categories
       const catRes = await api.getCategories();
       setCategories(catRes.categories ? catRes.categories.map(c => c.name) : []);
-      // Fetch transactions
       const params = {
         page,
         limit,
@@ -73,9 +71,7 @@ export default function TransactionsPage() {
       setTransactions(data.transactions || []);
       setKpis(data.kpis || { totalIncome: 0, totalExpenses: 0, netBalance: 0 });
       setTotalPages(data.totalPages || 1);
-    } catch (err) {
-      // handle error
-    }
+    } catch (err) {}
     setLoading(false);
   };
 
@@ -92,13 +88,20 @@ export default function TransactionsPage() {
     }
     try {
       let body = { ...formTx, amount: Number(formTx.amount) };
-      await api.addFinancialRecord(body); // Use financial record API
+      if (formImageFile) {
+        const formData = new FormData();
+        Object.entries(body).forEach(([k, v]) => formData.append(k, v));
+        formData.append("image", formImageFile);
+        await api.addFinancialRecord(formData);
+      } else {
+        await api.addFinancialRecord(body);
+      }
       setFormTx(emptyTx);
       setFormImageFile(null);
       setIsAddOpen(false);
-      setSuccessMsg("Transaction added successfully!"); // <-- NEW
-      fetchTransactions(); // <-- NEW
-      setTimeout(() => setSuccessMsg(""), 2500); // <-- NEW
+      setSuccessMsg("Transaction added successfully!");
+      fetchTransactions();
+      setTimeout(() => setSuccessMsg(""), 2500);
     } catch (err) {
       alert("Failed to add transaction.");
     }
@@ -108,13 +111,20 @@ export default function TransactionsPage() {
   const handleSaveEdit = async () => {
     try {
       let body = { ...formTx, amount: Number(formTx.amount) };
-      await api.updateRecord(formTx._id, body); // Use financial record API
+      if (formImageFile) {
+        const formData = new FormData();
+        Object.entries(body).forEach(([k, v]) => formData.append(k, v));
+        formData.append("image", formImageFile);
+        await api.updateRecord(formTx._id, formData);
+      } else {
+        await api.updateRecord(formTx._id, body);
+      }
       setIsEditOpen(false);
       setSelectedTx(null);
       setFormImageFile(null);
-      setSuccessMsg("Transaction updated successfully!"); // <-- NEW
-      fetchTransactions(); // <-- NEW
-      setTimeout(() => setSuccessMsg(""), 2500); // <-- NEW
+      setSuccessMsg("Transaction updated successfully!");
+      fetchTransactions();
+      setTimeout(() => setSuccessMsg(""), 2500);
     } catch (err) {
       alert("Failed to update transaction.");
     }
@@ -123,12 +133,12 @@ export default function TransactionsPage() {
   // Delete Transaction
   const handleDelete = async (id) => {
     try {
-      await api.deleteRecord(id); // Use financial record API
+      await api.deleteRecord(id);
       setIsDeleteOpen(false);
       setSelectedTx(null);
-      setSuccessMsg("Transaction deleted successfully!"); // <-- NEW
-      fetchTransactions(); // <-- NEW
-      setTimeout(() => setSuccessMsg(""), 2500); // <-- NEW
+      setSuccessMsg("Transaction deleted successfully!");
+      fetchTransactions();
+      setTimeout(() => setSuccessMsg(""), 2500);
     } catch (err) {
       alert("Failed to delete transaction.");
     }
@@ -176,25 +186,25 @@ export default function TransactionsPage() {
     return IMAGE_BASE + img;
   };
 
-  // UI
   return (
-<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-2 sm:p-4 md:p-6 space-y-6">      {/* Success Message */}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-2 sm:p-4 md:p-6 space-y-6">
+      {/* Success Message */}
       {successMsg && (
-  <div
+        <div
           className="fixed top-6 right-4 sm:right-8 z-50 bg-green-100 border border-green-300 text-green-700 px-4 sm:px-6 py-3 rounded-lg shadow-lg font-semibold"
           style={{ minWidth: 180, maxWidth: 360, width: "auto" }}
         >
           {successMsg}
         </div>
-)}
+      )}
 
       {/* Header + Actions */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-2xl font-bold">Transactions</h2>
+        <h2 className="text-2xl font-bold text-primary dark:text-blue-300">Transactions</h2>
         <div className="flex flex-col sm:flex-row items-stretch gap-3 sm:gap-6 w-full md:w-auto">
           <Button variant="outline" className="w-full sm:w-auto" onClick={exportCSV}>Export CSV</Button>
           <Button
-            className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl w-full sm:w-auto"
+            className="bg-primary hover:bg-primary/90 text-white rounded-xl w-full sm:w-auto"
             onClick={() => { setFormTx(emptyTx); setFormImageFile(null); setIsAddOpen(true); }}
           >
             <Plus className="w-4 h-4 mr-2" /> Add Transaction
@@ -207,7 +217,7 @@ export default function TransactionsPage() {
         <Card>
           <CardHeader><CardTitle>Total Income</CardTitle></CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold">₹{kpis.totalIncome?.toLocaleString?.() ?? 0}</div>
+            <div className="text-2xl font-semibold text-green-600">₹{kpis.totalIncome?.toLocaleString?.() ?? 0}</div>
           </CardContent>
         </Card>
         <Card>
@@ -225,7 +235,6 @@ export default function TransactionsPage() {
           </CardContent>
         </Card>
       </div>
-
 
       {/* Filters + Search */}
       <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 mb-2">
@@ -269,7 +278,7 @@ export default function TransactionsPage() {
       {/* Table */}
       <Card className="overflow-x-auto">
         <table className="w-full text-sm min-w-[600px]">
-          <thead className="bg-gray-100">
+          <thead className="bg-primary/10 dark:bg-primary/20">
             <tr>
               <th className="px-4 py-2 text-left">Date</th>
               <th className="px-4 py-2 text-left">Type</th>
@@ -281,7 +290,7 @@ export default function TransactionsPage() {
           </thead>
           <tbody>
             {sortedTransactions.map(tx => (
-              <tr key={tx._id} className="border-b">
+              <tr key={tx._id} className="border-b hover:bg-primary/5 dark:hover:bg-gray-700">
                 <td className="px-4 py-2">{new Date(tx.date).toLocaleDateString()}</td>
                 <td className={`px-4 py-2 font-medium ${tx.type==="income" ? "text-green-600":"text-red-600"}`}>{tx.type}</td>
                 <td className="px-4 py-2">{tx.category}</td>
@@ -299,7 +308,6 @@ export default function TransactionsPage() {
         </table>
       </Card>
 
-
       {/* Pagination */}
       <div className="flex flex-col sm:flex-row justify-between items-center mt-4 gap-2">
         <div>
@@ -315,10 +323,9 @@ export default function TransactionsPage() {
         </div>
       </div>
 
-
       {/* Add Modal */}
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogContent className="bg-white rounded-xl w-full max-w-lg">
+        <DialogContent className="bg-white dark:bg-gray-900 rounded-xl w-full max-w-lg">
           <DialogHeader><DialogTitle>Add Transaction</DialogTitle></DialogHeader>
           <div className="space-y-3">
             <div><p className="text-sm font-medium">Date</p><Input type="date" value={formTx.date} onChange={e=>setFormTx({...formTx,date:e.target.value})} /></div>
@@ -345,10 +352,9 @@ export default function TransactionsPage() {
         </DialogContent>
       </Dialog>
 
-
       {/* Edit Modal */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="bg-white rounded-xl w-full max-w-lg">
+        <DialogContent className="bg-white dark:bg-gray-900 rounded-xl w-full max-w-lg">
           <DialogHeader><DialogTitle>Edit Transaction</DialogTitle></DialogHeader>
           <div className="space-y-3">
             <div><p className="text-sm font-medium">Date</p><Input type="date" value={formTx.date} onChange={e=>setFormTx({...formTx,date:e.target.value})} /></div>
@@ -380,7 +386,7 @@ export default function TransactionsPage() {
 
       {/* View Modal */}
       <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
-        <DialogContent className="bg-white rounded-xl max-w-2xl w-full">
+        <DialogContent className="bg-white dark:bg-gray-900 rounded-xl max-w-2xl w-full">
           <DialogHeader><DialogTitle>Transaction Details</DialogTitle></DialogHeader>
           {selectedTx && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
@@ -417,7 +423,7 @@ export default function TransactionsPage() {
 
       {/* Delete Confirmation */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DialogContent className="bg-white rounded-xl w-full max-w-md">
+        <DialogContent className="bg-white dark:bg-gray-900 rounded-xl w-full max-w-md">
           <DialogHeader><DialogTitle>Delete Transaction</DialogTitle></DialogHeader>
           <div>Are you sure you want to delete this transaction?</div>
           <DialogFooter>

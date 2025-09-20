@@ -8,9 +8,10 @@ export default function ToastContainer() {
         <div
           key={t.id}
           className={`rounded px-4 py-2 shadow-lg
-            ${t.variant === "destructive" ? "bg-red-600 text-white" : "bg-white text-black"}
+            ${t.variant === "destructive"
+              ? "bg-red-600 text-white border-red-500"
+              : "bg-white text-black dark:bg-gray-800 dark:text-gray-100 border-green-500"}
             border-l-4
-            ${t.variant === "destructive" ? "border-red-500" : "border-green-500"}
           `}
         >
           <div className="font-bold">{t.title}</div>

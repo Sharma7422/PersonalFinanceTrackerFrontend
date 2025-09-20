@@ -76,13 +76,13 @@ export default function DashboardHome() {
       {/* Top bar with Financial Calendar and Add Record buttons */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 md:mb-0">
+          <h1 className="text-2xl sm:text-3xl font-bold text-primary dark:text-blue-300 mb-2 md:mb-0">
             Dashboard Overview
           </h1>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           <Button
-            className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl flex items-center justify-center px-4 py-2 sm:px-5 sm:py-3 text-base sm:text-lg w-full sm:w-auto"
+            className="bg-primary hover:bg-primary/90 text-white rounded-xl flex items-center justify-center px-4 py-2 sm:px-5 sm:py-3 text-base sm:text-lg w-full sm:w-auto"
             onClick={() => navigate("/calendar")}
           >
             <FaCalendarCheck className="mr-2" /> Financial Calendar
@@ -150,10 +150,10 @@ export default function DashboardHome() {
           initial="hidden"
           animate="visible"
           variants={cardVariants}
-          className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow flex flex-col items-center border-l-4 border-indigo-500 min-w-0"
+          className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow flex flex-col items-center border-l-4 border-primary min-w-0"
         >
           <div className="flex items-center gap-2 mb-2">
-            <FaWallet className="text-indigo-500 text-xl sm:text-2xl" />
+            <FaWallet className="text-primary text-xl sm:text-2xl" />
             <span className="font-bold text-base sm:text-lg">Net Balance</span>
           </div>
           <p className={`text-2xl sm:text-3xl font-bold ${dashboard.netBalance >= 0 ? "text-emerald-600" : "text-rose-600"} break-words`}>
@@ -193,7 +193,7 @@ export default function DashboardHome() {
         transition={{ delay: 0.2 }}
         className="rounded-2xl shadow-lg p-4 sm:p-6 mb-8"
         style={{
-          background: "linear-gradient(90deg, #6366f1 0%, #a21caf 100%)",
+          background: "linear-gradient(90deg, #2563eb 0%, #a21caf 100%)",
           color: "#fff"
         }}
       >
@@ -214,7 +214,7 @@ export default function DashboardHome() {
         <div className="text-right mt-4">
           <Button
             variant="secondary"
-            className="bg-white text-indigo-600 font-semibold hover:bg-gray-200 rounded-xl"
+            className="bg-white text-primary font-semibold hover:bg-gray-200 rounded-xl"
             onClick={() => navigate("/insights")}
           >
             View All Insights →
@@ -227,9 +227,9 @@ export default function DashboardHome() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-8"
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sm:p-6 mb-8"
       >
-        <h2 className="text-lg sm:text-xl font-semibold mb-4">Recent Financial Records</h2>
+        <h2 className="text-lg sm:text-xl font-semibold mb-4 text-primary dark:text-blue-300">Recent Financial Records</h2>
         <FinancialRecordList
           records={dashboard.recentRecords || []}
           onDataChanged={fetchData}
@@ -238,4 +238,3 @@ export default function DashboardHome() {
     </>
   );
 }
-

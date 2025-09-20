@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
@@ -12,13 +11,11 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useTheme } from "next-themes";
 import ThemeToggle from "../components/ThemeToggle";
-// import { useThemeContext } from "../components/ThemeContext";
 import {
   Download,
   Shield,
-  Settings,
+  Settings as SettingsIcon,
   Bell,
   Database,
   Trash,
@@ -37,10 +34,7 @@ import api from "../api/api";
 const IMAGE_BASE = import.meta.env.VITE_IMAGE_BASE + "/userImg/";
 
 export default function SettingsPage() {
-  // Theme
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
+  // Theme (use ThemeToggle for switching)
   // UI states
   const [notifications, setNotifications] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
@@ -103,60 +97,59 @@ export default function SettingsPage() {
 
   // Fetch categories
   const fetchCategories = async () => {
-  setCatLoading(true);
-  setErrorMsg("");
-  try {
-    const res = await api.getCategories();
-    setCategories(res.categories || []);
-  } catch (err) {
-    setErrorMsg("Failed to load categories");
-  } finally {
-    setCatLoading(false);
-  }
-};
+    setCatLoading(true);
+    setErrorMsg("");
+    try {
+      const res = await api.getCategories();
+      setCategories(res.categories || []);
+    } catch (err) {
+      setErrorMsg("Failed to load categories");
+    } finally {
+      setCatLoading(false);
+    }
+  };
 
-//fetch tags
-const fetchTags = async () => {
-  setTagLoading(true);
-  try {
-    const res = await api.getCategories();
-    setTags(res.tags || []);
-  } catch {
-    // ignore
-  }
-  setTagLoading(false);
-};
+  // Fetch tags
+  const fetchTags = async () => {
+    setTagLoading(true);
+    try {
+      const res = await api.getCategories();
+      setTags(res.tags || []);
+    } catch {
+      // ignore
+    }
+    setTagLoading(false);
+  };
 
   // Profile update
-const handleSaveProfile = async () => {
-  setErrorMsg("");
-  setSuccessMsg("");
-  try {
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("phoneNo", phoneNo);
-    if (profile) formData.append("profile", profile);
+  const handleSaveProfile = async () => {
+    setErrorMsg("");
+    setSuccessMsg("");
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("phoneNo", phoneNo);
+      if (profile) formData.append("profile", profile);
 
-    const res = await api.updateProfile(formData);
-    await fetchProfile();
-    setSuccessMsg("Profile updated!");
+      const res = await api.updateProfile(formData);
+      await fetchProfile();
+      setSuccessMsg("Profile updated!");
 
-    // Update localStorage and reload to update topbar info after a short delay
-    const updatedUser = {
-      name: res.data.name,
-      avatar: res.data.profile // this is the filename or image path from backend
-    };
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+      // Update localStorage and reload to update topbar info after a short delay
+      const updatedUser = {
+        name: res.data.name,
+        avatar: res.data.profile // this is the filename or image path from backend
+      };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
 
-  } catch (err) {
-    setErrorMsg(err.response?.data?.message || "Failed to update profile");
-  }
-};
-
+    } catch (err) {
+      setErrorMsg(err.response?.data?.message || "Failed to update profile");
+    }
+  };
 
   // Password update
   const handleChangePassword = async () => {
@@ -284,31 +277,29 @@ const handleSaveProfile = async () => {
     }
   };
 
+  // Download csv file function
+  const handleExportCSV = () => {
+    // Prepare CSV headers
+    let csv = "Type,Name\n";
+    // Add categories
+    categories.forEach(cat => {
+      csv += `Category,"${cat.name.replace(/"/g, '""')}"\n`;
+    });
+    // Add tags
+    tags.forEach(tag => {
+      csv += `Tag,"${tag.name.replace(/"/g, '""')}"\n`;
+    });
 
-  
-//  Download csv file function
-const handleExportCSV = () => {
-  // Prepare CSV headers
-  let csv = "Type,Name\n";
-  // Add categories
-  categories.forEach(cat => {
-    csv += `Category,"${cat.name.replace(/"/g, '""')}"\n`;
-  });
-  // Add tags
-  tags.forEach(tag => {
-    csv += `Tag,"${tag.name.replace(/"/g, '""')}"\n`;
-  });
-
-  // Create a Blob and trigger download
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.setAttribute("download", "finance-data.csv");
-  document.body.appendChild(link);
-  link.click();
-  link.parentNode.removeChild(link);
-};
+    // Create a Blob and trigger download
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "finance-data.csv");
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+  };
 
   // Profile image preview
   const handleProfileChange = (e) => {
@@ -324,6 +315,7 @@ const handleExportCSV = () => {
   };
 
   // Effects
+  const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   useEffect(() => {
     if (mounted) {
@@ -350,7 +342,6 @@ const handleExportCSV = () => {
 
   if (!mounted) return null;
 
-
   function getImageUrl(img) {
     if (!img) return "";
     if (img.startsWith("http")) return img;
@@ -370,7 +361,7 @@ const handleExportCSV = () => {
       {/* Mobile Toggle Button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="md:hidden fixed top-4 right-4 z-30 p-2 bg-indigo-600 text-white rounded-lg shadow-lg"
+        className="md:hidden fixed top-4 right-4 z-30 p-2 bg-primary text-white rounded-lg shadow-lg"
         aria-label="Toggle settings menu"
       >
         {sidebarOpen ? <X /> : <Menu />}
@@ -383,14 +374,14 @@ const handleExportCSV = () => {
         transition={{ type: "spring", stiffness: 80 }}
         className={`${
           sidebarOpen ? "fixed top-0 left-0 z-30" : "hidden md:block"
-      } md:static w-64 bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 space-y-4 h-full`}
-      style={{ minHeight: "calc(100vh - 32px)" }}
-    >
+        } md:static w-64 bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 space-y-4 h-full`}
+        style={{ minHeight: "calc(100vh - 32px)" }}
+      >
         <h3 className="text-xl font-bold mb-3">⚙️ Settings</h3>
         <nav className="space-y-2">
           {[
             { id: "profile", icon: <User size={18} />, label: "Profile" },
-            { id: "appearance", icon: <Settings size={18} />, label: "Appearance" },
+            { id: "appearance", icon: <SettingsIcon size={18} />, label: "Appearance" },
             { id: "notifications", icon: <Bell size={18} />, label: "Notifications" },
             { id: "data", icon: <Database size={18} />, label: "Data" },
             { id: "categories", icon: <List size={18} />, label: "Categories" },
@@ -401,7 +392,7 @@ const handleExportCSV = () => {
               onClick={() => handleTabChange(tab.id)}
               className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg transition-all ${
                 activeTab === tab.id
-                  ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
+                  ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-md"
                   : "hover:bg-gray-100 dark:hover:bg-gray-800"
               }`}
             >
@@ -465,7 +456,7 @@ const handleExportCSV = () => {
               </div>
               <Button
                 onClick={handleSaveProfile}
-                className="mt-4 w-full flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white"
+                className="mt-4 w-full flex items-center gap-2 bg-primary hover:bg-primary/90 text-white"
               >
                 <Save size={18} /> Save Profile
               </Button>
@@ -489,7 +480,7 @@ const handleExportCSV = () => {
                 <Button
                   onClick={handleChangePassword}
                   disabled={passwordLoading}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                  className="bg-primary hover:bg-primary/90 text-white"
                 >
                   {passwordLoading ? "Updating..." : "Update Password"}
                 </Button>
@@ -502,17 +493,17 @@ const handleExportCSV = () => {
         {activeTab === "appearance" && (
           <>
             <h2 className="text-2xl font-bold border-b pb-2">🎨 Appearance</h2>
-      <motion.div
-        custom={1}
-        initial="hidden"
-        animate="visible"
-        variants={itemVariants}
-        className="flex items-center justify-between py-4"
-      >
-        <Label className="text-lg">Dark Mode</Label>
-        <ThemeToggle />
-      </motion.div>
-    </>
+            <motion.div
+              custom={1}
+              initial="hidden"
+              animate="visible"
+              variants={itemVariants}
+              className="flex items-center justify-between py-4"
+            >
+              <Label className="text-lg">Dark Mode</Label>
+              <ThemeToggle />
+            </motion.div>
+          </>
         )}
 
         {/* Notifications */}
@@ -584,12 +575,12 @@ const handleExportCSV = () => {
               className="pt-4 border-t border-gray-200 dark:border-gray-700"
             >
               <Button
-  onClick={handleExportCSV}
-  className="w-full flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white"
->
-  <Download size={18} />
-  Export Data (CSV)
-</Button>
+                onClick={handleExportCSV}
+                className="w-full flex items-center gap-2 bg-primary hover:bg-primary/90 text-white"
+              >
+                <Download size={18} />
+                Export Data (CSV)
+              </Button>
             </motion.div>
           </>
         )}
@@ -607,7 +598,7 @@ const handleExportCSV = () => {
                   onChange={(e) => setNewCategory(e.target.value)}
                   disabled={catLoading}
                 />
-                <Button onClick={handleAddCategory} className="bg-indigo-600 hover:bg-indigo-700 text-white" disabled={catLoading}>
+                <Button onClick={handleAddCategory} className="bg-primary hover:bg-primary/90 text-white" disabled={catLoading}>
                   <FolderPlus size={18} /> Add
                 </Button>
               </div>
@@ -672,7 +663,7 @@ const handleExportCSV = () => {
                   onChange={(e) => setNewTag(e.target.value)}
                   disabled={tagLoading}
                 />
-                <Button onClick={handleAddTag} className="bg-indigo-600 hover:bg-indigo-700 text-white" disabled={tagLoading}>
+                <Button onClick={handleAddTag} className="bg-primary hover:bg-primary/90 text-white" disabled={tagLoading}>
                   <FolderPlus size={18} /> Add
                 </Button>
               </div>
@@ -746,5 +737,3 @@ const handleExportCSV = () => {
     </div>
   );
 }
-
-

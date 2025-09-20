@@ -37,7 +37,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-blue-50 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-colors duration-500 overflow-hidden px-2 sm:px-4">
+    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-200 via-blue-100 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-colors duration-500 overflow-hidden px-2 sm:px-4">
       {/* Blurred finance background image */}
       <img
         src={FINANCE_BG}
@@ -50,7 +50,7 @@ export default function LoginPage() {
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-200/60 via-white/40 to-pink-100/60 dark:from-gray-900/80 dark:via-gray-800/70 dark:to-indigo-900/80 z-0" />
       {/* Animated floating gradient blob */}
       <motion.div
-        className="absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] bg-gradient-to-tr from-indigo-400 via-pink-400 to-blue-400 opacity-25 rounded-full blur-3xl z-0"
+        className="absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] bg-gradient-to-tr from-indigo-400 via-pink-400 to-blue-400 opacity-30 rounded-full blur-3xl z-0"
         initial={{ scale: 0.7, x: 200, y: 100 }}
         animate={{ scale: 1.1, x: 0, y: 0 }}
         transition={{ duration: 1.2, type: "spring" }}
@@ -69,8 +69,8 @@ export default function LoginPage() {
           transition={{ delay: 0.1 }}
           className="flex flex-col items-center mb-8 sm:mb-10"
         >
-          <LogIn className="w-14 h-14 text-indigo-600 mb-3 drop-shadow-lg" />
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-indigo-700 dark:text-indigo-200 mb-2 tracking-tight drop-shadow text-center">
+          <LogIn className="w-14 h-14 text-primary mb-3 drop-shadow-lg" />
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-primary dark:text-blue-200 mb-2 tracking-tight drop-shadow text-center">
             Welcome Back
           </h2>
           <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg text-center font-medium">
@@ -91,10 +91,10 @@ export default function LoginPage() {
               value={email}
               required
               onChange={(e) => setEmail(e.target.value)}
-              className="pl-12 py-3 text-base sm:text-lg rounded-xl shadow w-full"
+              className="pl-12 py-3 text-base sm:text-lg rounded-xl shadow w-full bg-white dark:bg-gray-900"
               autoFocus
             />
-            <Mail className="absolute left-3 top-10 text-indigo-400" size={22} />
+            <Mail className="absolute left-3 top-10 text-primary" size={22} />
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 30 }}
@@ -109,14 +109,14 @@ export default function LoginPage() {
               value={password}
               required
               onChange={(e) => setPassword(e.target.value)}
-              className="pl-12 py-3 text-base sm:text-lg rounded-xl shadow w-full"
+              className="pl-12 py-3 text-base sm:text-lg rounded-xl shadow w-full bg-white dark:bg-gray-900"
             />
-            <Lock className="absolute left-3 top-10 text-indigo-400" size={22} />
+            <Lock className="absolute left-3 top-10 text-primary" size={22} />
             {/* Forgot password link */}
             <div className="flex justify-end mt-1">
               <Link
                 to="/forgot-password"
-                className="text-sm text-indigo-600 hover:underline font-semibold transition-colors duration-200"
+                className="text-sm text-primary hover:underline font-semibold transition-colors duration-200"
               >
                 Forgot password?
               </Link>
@@ -141,13 +141,13 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white font-bold py-3 rounded-2xl shadow-xl text-base sm:text-lg transition-all duration-200"
+              className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 rounded-2xl shadow-xl text-base sm:text-lg transition-all duration-200"
             >
               {loading ? "Logging in..." : "Login"}
             </Button>
             <span className="mt-5 text-gray-500 dark:text-gray-300 text-base">
               New here?{" "}
-              <Link to="/register" className="text-indigo-600 font-semibold hover:underline">
+              <Link to="/register" className="text-primary font-semibold hover:underline">
                 Register
               </Link>
             </span>

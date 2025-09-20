@@ -91,7 +91,7 @@ export default function FinancialCalendar() {
       <span className={`text-3xl ${color}`}>{icon}</span>
       <div className="flex-1 text-center sm:text-left">
         <div className="font-semibold text-lg">{title}</div>
-        {subtitle && <div className="text-sm text-gray-500">{subtitle}</div>}
+        {subtitle && <div className="text-sm text-gray-500 dark:text-gray-400">{subtitle}</div>}
       </div>
       <div className="flex gap-2 mt-3 sm:mt-0">
         <Button size="sm" variant="outline" onClick={onEdit} className="w-full sm:w-auto">Edit</Button>
@@ -112,7 +112,7 @@ export default function FinancialCalendar() {
       >
         <div>
           <h2 className="text-3xl sm:text-4xl font-bold flex items-center gap-3 mb-2">
-            <FaCalendarCheck className="text-indigo-500" /> Financial Calendar
+            <FaCalendarCheck className="text-primary dark:text-blue-300" /> Financial Calendar
           </h2>
           <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg">
             Track your bills in one place. Click a date to view or add bills!
@@ -120,7 +120,7 @@ export default function FinancialCalendar() {
         </div>
         <Button
           onClick={() => openModal()}
-          className="bg-rose-600 hover:bg-rose-700 text-white flex items-center px-6 py-3 text-base sm:text-lg rounded-2xl shadow-lg w-full md:w-auto"
+          className="bg-primary hover:bg-primary/90 text-white flex items-center px-6 py-3 text-base sm:text-lg rounded-2xl shadow-lg w-full md:w-auto"
           style={{ minWidth: 180 }}
         >
           <FaPlus className="mr-2" /> Add Bill
@@ -156,7 +156,7 @@ export default function FinancialCalendar() {
         <div className="flex-1 max-w-2xl mx-auto lg:mx-0">
           <div className="sticky top-0 bg-transparent z-10 pb-2">
             <h3 className="text-2xl sm:text-3xl font-semibold mb-6">
-              Bills for <span className="text-indigo-600">{selected.toDateString()}</span>
+              Bills for <span className="text-primary dark:text-blue-300">{selected.toDateString()}</span>
             </h3>
           </div>
           <div className="space-y-6">
@@ -176,7 +176,7 @@ export default function FinancialCalendar() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-gray-400 text-center mt-12 text-lg"
+                  className="text-gray-400 dark:text-gray-500 text-center mt-12 text-lg"
                 >
                   No bills for this date.
                 </motion.div>
@@ -195,7 +195,7 @@ export default function FinancialCalendar() {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-gray-400 text-center"
+                    className="text-gray-400 dark:text-gray-500 text-center"
                   >
                     No upcoming bills in the next 5 days.
                   </motion.div>
@@ -236,7 +236,7 @@ export default function FinancialCalendar() {
               placeholder="Bill Name"
               value={form.name}
               onChange={handleChange}
-              className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-primary"
               required
             />
             <input
@@ -245,7 +245,7 @@ export default function FinancialCalendar() {
               placeholder="Amount"
               value={form.amount}
               onChange={handleChange}
-              className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-primary"
               required
             />
             <input
@@ -254,12 +254,12 @@ export default function FinancialCalendar() {
               placeholder="Due Date"
               value={form.dueDate}
               onChange={handleChange}
-              className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-primary"
               required
             />
             <Button
               type="submit"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-3 text-base sm:text-lg font-semibold w-full"
+              className="bg-primary hover:bg-primary/90 text-white rounded-xl py-3 text-base sm:text-lg font-semibold w-full"
             >
               {editing ? "Update" : "Add"}
             </Button>

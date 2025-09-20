@@ -77,7 +77,7 @@ const FinancialRecordForm = ({ onSubmitComplete, userId }) => {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="space-y-5"
+      className="space-y-5 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
@@ -88,12 +88,12 @@ const FinancialRecordForm = ({ onSubmitComplete, userId }) => {
         required
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="rounded-xl w-full"
+        className="rounded-xl w-full bg-white dark:bg-gray-800 border border-primary/30 dark:border-blue-900 focus:ring-primary"
       />
 
       {/* Type */}
       <Select value={type} onValueChange={setType}>
-        <SelectTrigger className="rounded-xl border w-full">
+        <SelectTrigger className="rounded-xl border w-full bg-white dark:bg-gray-800 border-primary/30 dark:border-blue-900 focus:ring-primary">
           <SelectValue placeholder="Select type" />
         </SelectTrigger>
         <SelectContent className="z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full min-w-[180px]">
@@ -104,7 +104,7 @@ const FinancialRecordForm = ({ onSubmitComplete, userId }) => {
 
       {/* Category */}
       <Select value={category} onValueChange={setCategory}>
-        <SelectTrigger className="rounded-xl border w-full">
+        <SelectTrigger className="rounded-xl border w-full bg-white dark:bg-gray-800 border-primary/30 dark:border-blue-900 focus:ring-primary">
           <SelectValue placeholder="Select category" />
         </SelectTrigger>
         <SelectContent className="z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full min-w-[180px]">
@@ -122,7 +122,7 @@ const FinancialRecordForm = ({ onSubmitComplete, userId }) => {
         required
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        className="rounded-xl w-full"
+        className="rounded-xl w-full bg-white dark:bg-gray-800 border border-primary/30 dark:border-blue-900 focus:ring-primary"
       />
 
       {/* Amount */}
@@ -132,7 +132,7 @@ const FinancialRecordForm = ({ onSubmitComplete, userId }) => {
         required
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
-        className="rounded-xl w-full"
+        className="rounded-xl w-full bg-white dark:bg-gray-800 border border-primary/30 dark:border-blue-900 focus:ring-primary"
       />
 
       {/* Image */}
@@ -140,7 +140,7 @@ const FinancialRecordForm = ({ onSubmitComplete, userId }) => {
         type="file"
         accept="image/*"
         onChange={(e) => setImage(e.target.files[0])}
-        className="rounded-xl w-full"
+        className="rounded-xl w-full bg-white dark:bg-gray-800 border border-primary/30 dark:border-blue-900 focus:ring-primary"
       />
 
       {/* Submit */}
@@ -149,7 +149,7 @@ const FinancialRecordForm = ({ onSubmitComplete, userId }) => {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-2"
+            className="w-full rounded-xl py-2 bg-primary hover:bg-primary/90 text-white dark:bg-blue-600 dark:hover:bg-blue-700"
           >
             {isSubmitting ? "Saving..." : "Save Record"}
           </Button>
@@ -170,5 +170,3 @@ const FinancialRecordForm = ({ onSubmitComplete, userId }) => {
 };
 
 export default FinancialRecordForm;
-
-
