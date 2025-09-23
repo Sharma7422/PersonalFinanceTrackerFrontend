@@ -349,67 +349,90 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row max-w-7xl mx-auto p-2 sm:p-4 md:p-8 gap-4 md:gap-6 relative">
+    <div className="flex flex-col md:flex-row max-w-7xl mx-auto p-2 sm:p-4 md:p-8 gap-4 md:gap-6 relative min-h-screen">
       {/* Mobile Sidebar Backdrop */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/30 z-20 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+{sidebarOpen && (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+    onClick={() => setSidebarOpen(false)}
+  />
+)}
 
-      {/* Mobile Toggle Button */}
+{/* Mobile Toggle Button */}
+<button
+  onClick={() => setSidebarOpen(!sidebarOpen)}
+  className="md:hidden fixed top-20 right-4 z-50 p-2.5 bg-primary text-white rounded-lg shadow-lg"
+  aria-label="Toggle settings menu"
+>
+  {sidebarOpen ? <X /> : <Menu />}
+</button>
+
+{/* Sidebar */}
+<motion.aside
+  initial={{ x: -300 }}
+  animate={{ x: 0 }}
+  exit={{ x: -300 }}
+  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+  className={`
+    fixed top-0 left-0 z-50 
+    w-72 h-full 
+    bg-white dark:bg-gray-900 
+    p-6 shadow-2xl
+    md:static md:shadow-md md:w-64 md:block
+    ${sidebarOpen ? "block" : "hidden"}
+    overflow-y-auto
+  `}
+>
+  <div className="flex items-center justify-between mb-6 md:mb-8">
+    <h3 className="text-xl font-bold">⚙️ Settings</h3>
+    <button
+      onClick={() => setSidebarOpen(false)}
+      className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+    >
+      <X size={20} />
+    </button>
+  </div>
+
+  <nav className="space-y-2">
+    {[
+      { id: "profile", icon: <User size={18} />, label: "Profile" },
+      { id: "appearance", icon: <SettingsIcon size={18} />, label: "Appearance" },
+      { id: "notifications", icon: <Bell size={18} />, label: "Notifications" },
+      { id: "data", icon: <Database size={18} />, label: "Data" },
+      { id: "categories", icon: <List size={18} />, label: "Categories" },
+      { id: "security", icon: <Shield size={18} />, label: "Security & Privacy" },
+    ].map((tab) => (
       <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="md:hidden fixed top-4 right-4 z-30 p-2 bg-primary text-white rounded-lg shadow-lg"
-        aria-label="Toggle settings menu"
+        key={tab.id}
+        onClick={() => handleTabChange(tab.id)}
+        className={`
+          flex items-center gap-2 w-full px-4 py-2.5 
+          rounded-lg transition-all duration-200
+          ${
+            activeTab === tab.id
+              ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-md"
+              : "hover:bg-gray-100 dark:hover:bg-gray-800"
+          }
+        `}
       >
-        {sidebarOpen ? <X /> : <Menu />}
+        {tab.icon} 
+        <span className="font-medium">{tab.label}</span>
       </button>
-
-      {/* Sidebar */}
-      <motion.aside
-        initial={{ x: -300 }}
-        animate={{ x: sidebarOpen || window.innerWidth >= 768 ? 0 : -300 }}
-        transition={{ type: "spring", stiffness: 80 }}
-        className={`${
-          sidebarOpen ? "fixed top-0 left-0 z-30" : "hidden md:block"
-        } md:static w-64 bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 space-y-4 h-full`}
-        style={{ minHeight: "calc(100vh - 32px)" }}
-      >
-        <h3 className="text-xl font-bold mb-3">⚙️ Settings</h3>
-        <nav className="space-y-2">
-          {[
-            { id: "profile", icon: <User size={18} />, label: "Profile" },
-            { id: "appearance", icon: <SettingsIcon size={18} />, label: "Appearance" },
-            { id: "notifications", icon: <Bell size={18} />, label: "Notifications" },
-            { id: "data", icon: <Database size={18} />, label: "Data" },
-            { id: "categories", icon: <List size={18} />, label: "Categories" },
-            { id: "security", icon: <Shield size={18} />, label: "Security & Privacy" },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => handleTabChange(tab.id)}
-              className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg transition-all ${
-                activeTab === tab.id
-                  ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-md"
-                  : "hover:bg-gray-100 dark:hover:bg-gray-800"
-              }`}
-            >
-              {tab.icon} {tab.label}
-            </button>
-          ))}
-        </nav>
-      </motion.aside>
+    ))}
+  </nav>
+</motion.aside>
 
       {/* Main Content */}
       <motion.div
         key={activeTab}
-        initial={{ opacity: 0, x: 30 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.4 }}
-        className="flex-1 bg-white dark:bg-gray-900 shadow-md rounded-xl p-4 sm:p-6 space-y-6 overflow-x-auto"
-      >
+  initial={{ opacity: 0, x: 20 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.3 }}
+  className="flex-1 bg-white dark:bg-gray-900 shadow-md rounded-xl p-4 sm:p-6 space-y-6"
+>
         {/* Feedback */}
         {(successMsg || errorMsg) && (
           <div className={`p-2 rounded text-center font-semibold ${successMsg ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
